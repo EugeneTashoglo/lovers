@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>♥ Александр и Ирина ♥</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #e43c79, #371623);
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    .press-hint {
+      font-size: 24px;
+      color: white;
+      margin-bottom: 16px;
+      animation: pulseArrow 1.5s infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .press-hint span {
+      font-size: 32px;
+      animation: bounce 1.2s infinite;
+    }
+
+    @keyframes pulseArrow {
+      0%, 100% {
+        opacity: 1;
+        transform: translateY(0px);
+      }
+      50% {
+        opacity: 0.6;
+        transform: translateY(5px);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(10px);
+      }
+    }
+
+    .button {
+      padding: 14px 30px;
+      font-size: 20px;
+      cursor: pointer;
+      border: none;
+      background: #e43c79;
+      color: #ffffff;
+      border-radius: 8px;
+      position: relative;
+      z-index: 10;
+      border: 3px solid #fff;
+      transition: 0.25s;
+      animation: moveUpDown 1s linear infinite;
+      font-weight: bold;
+      box-shadow: 0 0 10px #fff5;
+    }
+
+    .button:active {
+      background: #f1628f;
+    }
+
+    .confetti-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: pink;
+      opacity: 1;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    @keyframes moveUpDown {
+      0%, 100% {
+        bottom: 0;
+        animation-timing-function: ease-out;
+      }
+      30% {
+        bottom: 8px;
+        animation-timing-function: ease-in;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Анимационная подсказка -->
+  <div id="hint" class="press-hint">
+    Нажми<br><span>↓</span>
+  </div>
+
+  <!-- Кнопка -->
+  <button class="button" onclick="explodeConfetti(event)">♥ Ирина и Александр ♥</button>
+  <div class="confetti-container"></div>
+
+  <script>
+    function explodeConfetti(event) {
+      const button = event.target;
+      const numParticles = 80; // Больше конфетти
+      const colors = [
+        "#ffc0cb", // розовый
+        "#ffb6c1", // светло-розовый
+        "#ff69b4", // горячий розовый
+        "#db7093", // бледный малиновый
+        "#f06292", // розовая орхидея
+        "#ec407a", // насыщенно-розовый
+        "#e91e63", // яркий малиновый
+      ];
+
+      const rect = button.getBoundingClientRect();
+      const confettiContainer = document.querySelector(".confetti-container");
+
+      // Удалить подсказку после нажатия
+      const hint = document.getElementById("hint");
+      if (hint) {
+        hint.style.display = "none";
+      }
+
+      for (let i = 0; i < numParticles; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confettiContainer.appendChild(confetti);
+
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        confetti.style.left = `${x}px`;
+        confetti.style.top = `${y}px`;
+
+        const angle = Math.random() * 2 * Math.PI;
+        const velocity = Math.random() * 300 + 200; // немного больше разброс
+        const duration = Math.random() * 1800 + 1000;
+
+        const deltaX = Math.cos(angle) * velocity;
+        const deltaY = Math.sin(angle) * velocity;
+
+        confetti.animate(
+          [
+            { transform: `translate(0, 0) scale(1)`, opacity: 1 },
+            {
+              transform: `translate(${deltaX}px, ${deltaY}px) scale(0.5)`,
+              opacity: 0
+            }
+          ],
+          {
+            duration: duration,
+            easing: "ease-out"
+          }
+        );
+
+        setTimeout(() => confetti.remove(), duration);
+      }
+    }
+  </script>
+
+</body>
+</html>
